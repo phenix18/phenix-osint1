@@ -134,6 +134,59 @@ router.get('/message/:message', async (req, res) => {
   res.end('OK --> ' + req.params.message);
 });
 
+router.get('/list/:message', async (req, res) => {
+
+  // send a list message!
+  const sections = [
+    {
+      title: "Section 1",
+      rows: [
+        { title: "Option 1", rowId: "option1" },
+        { title: "Option 2", rowId: "option2", description: "This is a description" }
+      ]
+    },
+    {
+      title: "Section 2",
+      rows: [
+        { title: "Option 3", rowId: "option3" },
+        { title: "Option 4", rowId: "option4", description: "This is a description V2" }
+      ]
+    },
+  ]
+
+  const listMessage = {
+    text: "This is a list",
+    footer: "nice footer, link: https://google.com",
+    title: "Amazing boldfaced list title",
+    buttonText: "Required, text on the button to view the list",
+    sections
+  }
+
+
+  let msg = (await aruga.sendMessage('555198438917@s.whatsapp.net', listMessage));
+  res.end('OK --> ' + req.params.message);
+});
+
+router.get('/button/:message', async (req, res) => {
+
+  const templateButtons = [
+    { index: 1, urlButton: { displayText: '⭐ Diga que me ama!', url: 'https://github.com/adiwajshing/Baileys' } },
+    { index: 2, callButton: { displayText: 'me ligue!', phoneNumber: '+55 (51) 99890 4515' } },
+    { index: 3, quickReplyButton: { displayText: 'Resposta como botão!', id: 'id-like-buttons-message' } },
+  ]
+
+  const buttonMessage = {
+    text: req.params.message ?? "Acesse esse menu",
+    footer: 'gmprestes',
+    templateButtons: templateButtons,
+    //image: { url: 'https://example.com/image.jpeg' }
+  }
+
+
+  let msg = (await aruga.sendMessage('555198438917@s.whatsapp.net', buttonMessage));
+  res.end('OK --> ' + req.params.message);
+});
+
 app.use(express.json());
 app.use('/api', router);
 app.listen(port, () => {
