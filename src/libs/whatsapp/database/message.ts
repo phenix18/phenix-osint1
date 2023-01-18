@@ -31,14 +31,16 @@ export const createMessage = async (messageId: string, metadata: Partial<Omit<Me
     const messageData = await Database.message.create({
       data: {
         messageId,
-        ...metadata
+        ...metadata,
+        from: metadata.from ?? "",
       }
     })
 
     if (messageData) message.set(messageId, messageData)
 
     return messageData
-  } catch {
+  } catch (e) {
+    console.log(e);
     return null
   }
 }

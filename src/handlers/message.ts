@@ -3,7 +3,7 @@ import path from "path"
 import { inspect } from "util"
 import { exec } from "child_process"
 import { TimeoutError } from "@arugaz/queue"
-import type { Participants, Prisma } from "@prisma/client"
+import type { Message, Participants, Prisma } from "@prisma/client"
 
 import International from "../libs/international"
 import type WAClient from "../libs/whatsapp"
@@ -40,7 +40,7 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
   // ignore group that got banned by bot owner
   if (message.isGroupMsg && group.ban && !isOwner) return
 
-  
+
 
   // parse
   const prefix = message.body && ([[new RegExp("^[" + (config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(/[|\\{}()[\]^$+*?.\-^]/g, "\\$&") + "]").exec(message.body), config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-"]].find((p) => p[1])[0] || [""])[0]
@@ -54,8 +54,6 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
   const isGroupOwner = message.isGroupMsg && !!groupAdmins.find((member) => member.admin === "superadmin" && member.id === message.sender)
   const isGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === message.sender)
   const isBotGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === aruga.decodeJid(aruga.user.id))
-
-  console.log(' Is CMD -->', command);
 
   if (command) {
     // avoid spam messages
@@ -171,31 +169,12 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
       .finally(() => aruga.log(`${color.purple("[EXEC]")} ${color.cyan(`$ [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "info", message.timestamps))
   }
 
-  console.log('MSG --> ', message.body);
-  console.log('MSG Sender --> ', message.sender);
-  console.log('MSG id --> ', message.id);
-  console.log('MSG --> ', JSON.stringify(message));
-
-  const x = message.id && (await getMessage(message.id));
-  console.log(x);
-
-//   id       String  @id @default(auto()) @map("_id") @db.ObjectId
-//   /// Whatsapp message Jid
-//   messageId   String @unique
-
-//   /// Whatsapp user Jid
-//   senderId   String?
-
-//   /// Whatsapp message json
-//   body String?
-
-// /// Whatsapp message json
-//   data Json?
-
-  const x2 = await createMessage(message.id, { senderId:message.sender, body: message.body, data: (message as unknown) as Prisma.JsonObject })
-  console.log(x2);
-
-
+  let msg = await getMessage(message.id);
+  if (!msg) {
+    const {id, reply, resend, ...cast} = message;
+    msg = (await createMessage(message.id, (cast as unknown) as Message));
+  }
+  console.log('MSG --> ', msg)
 }
 
 export const registerCommand = async (pathname = "commands") => {

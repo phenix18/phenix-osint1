@@ -106,7 +106,7 @@ setImmediate(async () => {
       font: "block",
       space: false
     })
-    cfonts.say("'whatsapp-bot' By @arugaz @tobyg74", {
+    cfonts.say("'whatsapp-bot' By @gmprestes =)", {
       align: "center",
       font: "console",
       gradient: ["red", "#ee82f8" as HexColor]
