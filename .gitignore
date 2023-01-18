@@ -24,6 +24,7 @@ database/*
 languages/*
 !languages/id.json
 !languages/en.json
+!languages/pt.json
 
 #my private files
 werewolf*.ts
