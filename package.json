@@ -5,7 +5,6 @@
   "main": "./dist/main.js",
   "private": true,
   "scripts": {
-
     "build": "tsc --build",
     "build:db": "npx prisma db push",
     "dev": "rimraf dist && tsc-watch --build ./tsconfig.json --onSuccess \"node --inspect ./dist/main.js\" --noClear",
@@ -41,6 +40,7 @@
     "cfonts": "^3.1.1",
     "cheerio": "^1.0.0-rc.12",
     "croner": "^5.3.5",
+    "express": "^4.18.2",
     "form-data": "^4.0.0",
     "jimp": "^0.16.1",
     "link-preview-js": "^3.0.4",

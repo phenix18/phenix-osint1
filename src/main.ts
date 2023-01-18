@@ -14,6 +14,10 @@ import { i18nInit } from "./libs/international"
 
 import { resetUserLimit, resetUserRole } from "./utils/cron"
 
+import express from 'express';
+
+
+
 /** Initial Client */
 const aruga = new WAClient({
   // auth type "single" or "multi"
@@ -106,7 +110,7 @@ setImmediate(async () => {
       font: "block",
       space: false
     })
-    cfonts.say("'whatsapp-bot' By @gmprestes =)", {
+    cfonts.say("By @gmprestes =)", {
       align: "center",
       font: "console",
       gradient: ["red", "#ee82f8" as HexColor]
@@ -116,3 +120,26 @@ setImmediate(async () => {
     clearProcess()
   }
 })
+
+const port = 3000;
+const app = express();
+const router = express.Router();
+
+router.get('/ping', async (req, res) => {
+  res.end('OK');
+});
+
+router.get('/message/:message', async (req, res) => {
+  let msg = (await aruga.sendMessage('555198438917@s.whatsapp.net', { text: req.params.message }));
+  res.end('OK --> ' + req.params.message);
+});
+
+app.use(express.json());
+app.use('/api', router);
+app.listen(port, () => {
+  cfonts.say(`Message API listen on port ${port}`, {
+    align: "center",
+    font: "console",
+    gradient: ["red", "#ee82f8" as HexColor]
+  })
+});
