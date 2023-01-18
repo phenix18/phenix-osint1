@@ -111,19 +111,74 @@ enum Role {
   vip
 }
 
-/// Storing messages
+// /// Storing messages
+// model Message {
+//   id       String  @id @default(auto()) @map("_id") @db.ObjectId
+//   /// Whatsapp message Jid
+//   messageId   String @unique
+
+//   /// Whatsapp user Jid
+//   senderId   String?
+
+//   /// Whatsapp message json
+//   body String?
+
+// /// Whatsapp message json
+//   data Json?
+
+// }
+
 model Message {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  /// Whatsapp message Jid
-  messageId   String @unique
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  /// Whatsapp user Jid
-  senderId   String?
+  //Whatsapp key doc
+  message Json?
 
-  /// Whatsapp message json
+  //Whatsapp key doc
+  key Json?
+
+// Whatsapp message Jid
+  messageId String @unique
+
+// flag if message came form bot
+  isBotMsg Boolean @default(false)
+
+// flag is message is in group
+  isGroupMsg Boolean @default(false)
+
+// Whatsapp sender Jid or Group Id
+  from String
+
+// tells if message came from user it self
+  fromMe Boolean @default(false)
+
+// message type
+  type String?
+
+// Whatsapp sender Jid
+  sender String?
+
+// message it self in most cases
   body String?
 
-/// Whatsapp message json
-  data Json?
-  
+// mention on message
+  mentions String[] @default([])
+
+// view once flag
+  viewOnce Boolean @default(false)
+
+// message timestamp
+  timestamps Int?
+
+// experation time
+  expiration Int?
+
+// nick name
+  pushname String?
+
+// group metadata info
+  groupMetadata Json?
+
+// quoted message
+  quoted Json?
 }
