@@ -73,7 +73,7 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
       if (connection === "close") {
         const reason = new Boom(lastDisconnect?.error)?.output?.statusCode
         this.log("Disconnected!", "error")
-        if (reason === DisconnectReason.loggedOut || reason === DisconnectReason.multideviceMismatch || reason === DisconnectReason.badSession || reason === DisconnectReason.serviceUnavailable) {
+        if (reason === DisconnectReason.loggedOut || reason === DisconnectReason.multideviceMismatch || reason === DisconnectReason.badSession ) { //reason === DisconnectReason.serviceUnavailable) {
           if (clearState) {
             this.log("Deleting session...", "error")
             await clearState()
