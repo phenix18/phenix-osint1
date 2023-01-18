@@ -110,3 +110,20 @@ enum Role {
   premium
   vip
 }
+
+/// Storing messages
+model Message {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  /// Whatsapp message Jid
+  messageId   String @unique
+
+  /// Whatsapp user Jid
+  senderId   String?
+
+  /// Whatsapp message json
+  body String?
+
+/// Whatsapp message json
+  data Json?
+  
+}

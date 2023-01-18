@@ -24,7 +24,7 @@ const aruga = new WAClient({
     stdTTL: 60 * 5, // 5 mins
     useClones: false
   }),
-  syncFullHistory: false,
+  syncFullHistory: true,
   userDevicesCache: new NodeCache({
     stdTTL: 60 * 10, // 10 mins
     useClones: false

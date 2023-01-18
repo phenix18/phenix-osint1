@@ -3,7 +3,7 @@ import path from "path"
 import { inspect } from "util"
 import { exec } from "child_process"
 import { TimeoutError } from "@arugaz/queue"
-import type { Participants } from "@prisma/client"
+import type { Participants, Prisma } from "@prisma/client"
 
 import International from "../libs/international"
 import type WAClient from "../libs/whatsapp"
@@ -25,6 +25,9 @@ const getUser = database.getUser
 const createUser = database.createUser
 const getGroup = database.getGroup
 const createGroup = database.createGroup
+const createMessage = database.createMessage
+const getMessage = database.getMessage
+
 
 export const execute = async (aruga: WAClient, message: MessageSerialize): Promise<unknown> => {
   const group = message.isGroupMsg && ((await getGroup(message.from)) ?? (await createGroup(message.from, { name: message.groupMetadata.subject })))
@@ -36,6 +39,8 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
 
   // ignore group that got banned by bot owner
   if (message.isGroupMsg && group.ban && !isOwner) return
+
+  
 
   // parse
   const prefix = message.body && ([[new RegExp("^[" + (config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(/[|\\{}()[\]^$+*?.\-^]/g, "\\$&") + "]").exec(message.body), config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-"]].find((p) => p[1])[0] || [""])[0]
@@ -49,6 +54,8 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
   const isGroupOwner = message.isGroupMsg && !!groupAdmins.find((member) => member.admin === "superadmin" && member.id === message.sender)
   const isGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === message.sender)
   const isBotGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === aruga.decodeJid(aruga.user.id))
+
+  console.log(' Is CMD -->', command);
 
   if (command) {
     // avoid spam messages
@@ -163,6 +170,32 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
       .catch((err: unknown) => message.reply(inspect(err, true)))
       .finally(() => aruga.log(`${color.purple("[EXEC]")} ${color.cyan(`$ [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "info", message.timestamps))
   }
+
+  console.log('MSG --> ', message.body);
+  console.log('MSG Sender --> ', message.sender);
+  console.log('MSG id --> ', message.id);
+  console.log('MSG --> ', JSON.stringify(message));
+
+  const x = message.id && (await getMessage(message.id));
+  console.log(x);
+
+//   id       String  @id @default(auto()) @map("_id") @db.ObjectId
+//   /// Whatsapp message Jid
+//   messageId   String @unique
+
+//   /// Whatsapp user Jid
+//   senderId   String?
+
+//   /// Whatsapp message json
+//   body String?
+
+// /// Whatsapp message json
+//   data Json?
+
+  const x2 = await createMessage(message.id, { senderId:message.sender, body: message.body, data: (message as unknown) as Prisma.JsonObject })
+  console.log(x2);
+
+
 }
 
 export const registerCommand = async (pathname = "commands") => {

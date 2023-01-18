@@ -34,7 +34,7 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
           useClones: false
         })
       },
-      browser: ["whatsapp-bot", "Safari", "3.0.0"],
+      browser: ["gmprestes-bot", "Safari", "3.0.0"],
       logger,
       patchMessageBeforeSending: (message) => {
         const requiresPatch = !!(message.buttonsMessage || message.listMessage)
