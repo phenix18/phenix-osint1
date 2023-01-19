@@ -121,7 +121,7 @@ setImmediate(async () => {
   }
 })
 
-const port = 3000;
+const port = process.env.NODE_PORT || 3000;
 const app = express();
 const router = express.Router();
 
