@@ -1,5 +1,6 @@
 import type { Message } from "@prisma/client"
 import NodeCache from "node-cache"
+import { database } from ".."
 import Database from "../../../libs/database"
 //import config from "../../../utils/config"
 
@@ -69,3 +70,60 @@ export const deleteMessage = async (messageId: string) => {
     return null
   }
 }
+
+export const findMessages = async (lastTimestamps: number, page?: number, take? : number) => {
+  try {
+
+    page = page || 1;
+    if (page <= 0)
+      page = 1;
+    take = take || 50;
+
+    const query = {
+      timestamps: {
+        gte: lastTimestamps,
+      },
+    };
+
+    return await Database.message.findMany({
+      skip: take * page - 1,
+      take: take,
+      where: query,
+      orderBy: {
+        timestamps: 'desc',
+      }
+    })
+
+  } catch (e) {
+    console.log(e);
+    return null
+  }
+}
+
+export const countMessages = async (lastTimestamps: number) => {
+  try {
+    const query = {
+      timestamps: {
+        gte: lastTimestamps,
+      },
+    };
+
+    const aggregate = await Database.message.aggregate({
+      _count: {
+        timestamps: true,
+      },
+      where: query,
+      orderBy: {
+        timestamps: 'desc',
+      }
+    });
+
+    return aggregate._count.timestamps;
+
+  } catch (e) {
+    console.log(e);
+    return null
+  }
+}
+
+
