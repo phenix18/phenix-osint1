@@ -1,17 +1,17 @@
  {
   "timeZone": "Asia/Jakarta",
   "language": "en",
-  "ownerNumber": ["", ""],
-  "readStatus": false,
+  "ownerNumber": ["923145269482", ""],
+  "readStatus": true,
   "readMessage": false,
   "antiCall": {
     "reject": false,
     "block": false,
     "ban": false
   },
-  "prefix": "!#.",
-  "name": "𝙷ɪɢᴀꜱʜɪʏᴀᴍᴀ 𝙺ᴏʙᴇɴɪ",
-  "footer": "arugaz/whatsapp-bot",
+  "prefix": "$",
+  "name": "PRINCE",
+  "footer": "PRINCE",
   "self": true,
   "user": {
     "basic": {
